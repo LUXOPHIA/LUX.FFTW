@@ -1,8 +1,8 @@
-# LUX.Signal.FFTW
+# LUX.FFTW
 
 [English](README.md) | [日本語](ja/README.md)
 
-A Delphi (Object Pascal) binding and object-oriented wrapper for **FFTW 3**, the *Fastest Fourier Transform in the West* [1][2]. `fftw3.pas` translates the complete FFTW C API for both the double-precision (`libfftw3-3.dll`) and single-precision (`libfftw3f-3.dll`) libraries, while the `LUX.Signal.FFTW.*` units wrap FFTW *plans* in generic classes whose input and output buffers are LUX grid objects — resizing a grid automatically re-creates the plans.
+A Delphi (Object Pascal) binding and object-oriented wrapper for **FFTW 3**, the *Fastest Fourier Transform in the West* [1][2]. `fftw3.pas` translates the complete FFTW C API for both the double-precision (`libfftw3-3.dll`) and single-precision (`libfftw3f-3.dll`) libraries, while the `LUX.FFTW.*` units wrap FFTW *plans* in generic classes whose input and output buffers are LUX grid objects — resizing a grid automatically re-creates the plans.
 
 ## 利用ライブラリ
 
@@ -13,9 +13,9 @@ A Delphi (Object Pascal) binding and object-oriented wrapper for **FFTW 3**, the
 | Unit | Contents |
 |:---|:---|
 | `fftw3.pas` | Raw translation of the FFTW 3.3.11 C API: 72 entry points per precision — basic, advanced (`plan_many`) and guru (`plan_guru`, `plan_guru64`, split-array) plan constructors for c2c / r2c / c2r / r2r transforms, execution, plan copying (`fftw_copy_plan`), wisdom import/export, multi-threading (imported from the separate `libfftw3_threads-3.dll` / `libfftw3f_threads-3.dll`), allocators (`fftw_alloc_real`, `fftw_alloc_complex`), and planner diagnostics (`fftw_print_plan`, `fftw_cost`, `fftw_flops`). Declared for both `fftw_*` (double) and `fftwf_*` (single) |
-| `LUX.Signal.FFTW.pas` | `IDFT` interface and the generic base class `TDFT<_TItem_,_TTimes_,_TFreqs_>`, holding the two buffers, the two plans, and the `TransTF` / `TransFT` operations |
-| `D1/LUX.Signal.FFTW.D1.pas` | `IDFT1D` / `TDFT1D<…>` — buffers are `TPoinArray1D<_TItem_>`; a change of `PoinsX` propagates to the partner grid and triggers `RecreaPlans` |
-| `D1/LUX.Signal.FFTW.D1.Preset.pas` | Ready-made 1-D complex-to-complex transforms: `TSingleDFTcc1D` / `TDoubleDFTcc1D` (with `ISingleDFTcc1D` / `IDoubleDFTcc1D`) |
+| `LUX.FFTW.pas` | `IDFT` interface and the generic base class `TDFT<_TItem_,_TTimes_,_TFreqs_>`, holding the two buffers, the two plans, and the `TransTF` / `TransFT` operations |
+| `D1/LUX.FFTW.D1.pas` | `IDFT1D` / `TDFT1D<…>` — buffers are `TPoinArray1D<_TItem_>`; a change of `PoinsX` propagates to the partner grid and triggers `RecreaPlans` |
+| `D1/LUX.FFTW.D1.Preset.pas` | Ready-made 1-D complex-to-complex transforms: `TSingleDFTcc1D` / `TDoubleDFTcc1D` (with `ISingleDFTcc1D` / `IDoubleDFTcc1D`) |
 | `D2/…`, `D3/…` | The same two-layer construction for rank 2 (`TPoinArray2D`, `fftw_plan_dft_2d`) and rank 3 (`TPoinArray3D`, `fftw_plan_dft_3d`) |
 | `_DLL/`, `：FFTW/` | Prebuilt Win64 runtime DLLs, and the vendored FFTW 3.3.11 Windows build from the MSYS2 `mingw-w64-fftw` package [6] |
 
@@ -128,18 +128,18 @@ Buffers are LUX grid objects (`TCoreArray<_TItem_>` descendants), so `Elem0P` ha
 File layout:
 
 ```
-・LUX.Signal.FFTW/
-  ┣・fftw3.pas                         ･･･ raw FFTW 3 port, both precisions
-  ┣・LUX.Signal.FFTW.pas               ･･･ IDFT, generic TDFT base classes
+・LUX.FFTW/
+  ┣・fftw3.pas                    ･･･ raw FFTW 3 port, both precisions
+  ┣・LUX.FFTW.pas                 ･･･ IDFT, generic TDFT base classes
   ┣・D1/
-  ┃  ┣・LUX.Signal.FFTW.D1.pas        ･･･ IDFT1D / TDFT1D (auto re-plan)
-  ┃  ┗・LUX.Signal.FFTW.D1.Preset.pas ･･･ TSingleDFTcc1D / TDoubleDFTcc1D
-  ┣・D2/                               ･･･ same construction for rank 2
-  ┣・D3/                               ･･･ same construction for rank 3
+  ┃  ┣・LUX.FFTW.D1.pas           ･･･ IDFT1D / TDFT1D (auto re-plan)
+  ┃  ┗・LUX.FFTW.D1.Preset.pas    ･･･ TSingleDFTcc1D / TDoubleDFTcc1D
+  ┣・D2/                          ･･･ same construction for rank 2
+  ┣・D3/                          ･･･ same construction for rank 3
   ┣・_DLL/
-  ┃  ┗・Win64/{Debug,Release}/        ･･･ double/single + threads DLLs
-  ┗・：FFTW/                           ･･･ FFTW 3.3.11 (MSYS2 build)
-     ┗・fftw-3.3.11-msys2-x86_64/     ･･･ bin, include, lib, share, PKGINFO
+  ┃  ┗・Win64/{Debug,Release}/    ･･･ double/single + threads DLLs
+  ┗・：FFTW/                      ･･･ FFTW 3.3.11 (MSYS2 build)
+     ┗・fftw-3.3.11-msys2-x86_64/ ･･･ bin, include, lib, share, PKGINFO
 ```
 
 ## 4. Usage
@@ -147,8 +147,8 @@ File layout:
 ```pascal
 uses LUX.Complex,
      LUX.Data.Grid.T1,
-     LUX.Signal.FFTW,
-     LUX.Signal.FFTW.D1.Preset;
+     LUX.FFTW,
+     LUX.FFTW.D1.Preset;
 
 const
      _N_ = 512;

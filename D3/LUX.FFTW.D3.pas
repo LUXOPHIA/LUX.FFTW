@@ -1,10 +1,10 @@
-﻿unit LUX.Signal.FFTW.D3;
+﻿unit LUX.FFTW.D3;
 
 interface //#################################################################### ■
 
 uses LUX,
      LUX.Data.Grid.T3,
-     LUX.Signal.FFTW,
+     LUX.FFTW,
      fftw3;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】

@@ -1,11 +1,11 @@
-﻿unit LUX.Signal.FFTW.D2.Preset;
+﻿unit LUX.FFTW.D2.Preset;
 
 interface //#################################################################### ■
 
 uses LUX, LUX.Complex,
      LUX.Data.Grid.T2,
-     LUX.Signal.FFTW,
-     LUX.Signal.FFTW.D2,
+     LUX.FFTW,
+     LUX.FFTW.D2,
      fftw3;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】

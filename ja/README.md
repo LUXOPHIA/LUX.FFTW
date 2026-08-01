@@ -1,8 +1,8 @@
-# LUX.Signal.FFTW
+# LUX.FFTW
 
 [English](../README.md) | [日本語](README.md)
 
-高速フーリエ変換ライブラリ **FFTW 3**（*Fastest Fourier Transform in the West*）[1][2] の Delphi（Object Pascal）バインディングおよびオブジェクト指向ラッパー。`fftw3.pas` が倍精度（`libfftw3-3.dll`）・単精度（`libfftw3f-3.dll`）双方の FFTW C API を完全に移植し、`LUX.Signal.FFTW.*` ユニットが FFTW の *プラン* を汎用クラスで包む。入出力バッファは LUX のグリッドオブジェクトであり、グリッドをリサイズするとプランは自動的に再生成される。
+高速フーリエ変換ライブラリ **FFTW 3**（*Fastest Fourier Transform in the West*）[1][2] の Delphi（Object Pascal）バインディングおよびオブジェクト指向ラッパー。`fftw3.pas` が倍精度（`libfftw3-3.dll`）・単精度（`libfftw3f-3.dll`）双方の FFTW C API を完全に移植し、`LUX.FFTW.*` ユニットが FFTW の *プラン* を汎用クラスで包む。入出力バッファは LUX のグリッドオブジェクトであり、グリッドをリサイズするとプランは自動的に再生成される。
 
 ## 利用ライブラリ
 
@@ -13,9 +13,9 @@
 | ユニット | 内容 |
 |:---|:---|
 | `fftw3.pas` | FFTW 3.3.11 の C API の素の移植。精度ごとに 72 個のエントリポイント — c2c / r2c / c2r / r2r 変換の basic・advanced（`plan_many`）・guru（`plan_guru`, `plan_guru64`, split-array）プラン生成、実行、プラン複製（`fftw_copy_plan`）、wisdom の入出力、マルチスレッド（別 DLL `libfftw3_threads-3.dll` / `libfftw3f_threads-3.dll` からインポート）、アロケータ（`fftw_alloc_real`, `fftw_alloc_complex`）、プランナ診断（`fftw_print_plan`, `fftw_cost`, `fftw_flops`）。`fftw_*`（倍精度）と `fftwf_*`（単精度）の双方を宣言 |
-| `LUX.Signal.FFTW.pas` | `IDFT` インタフェースと汎用基底クラス `TDFT<_TItem_,_TTimes_,_TFreqs_>`。2 本のバッファ、2 個のプラン、`TransTF` / `TransFT` 操作を保持 |
-| `D1/LUX.Signal.FFTW.D1.pas` | `IDFT1D` / `TDFT1D<…>` — バッファは `TPoinArray1D<_TItem_>`。`PoinsX` の変更は相手側グリッドへ伝播し `RecreaPlans` を起動する |
-| `D1/LUX.Signal.FFTW.D1.Preset.pas` | 即用の 1 次元複素→複素変換：`TSingleDFTcc1D` / `TDoubleDFTcc1D`（および `ISingleDFTcc1D` / `IDoubleDFTcc1D`） |
+| `LUX.FFTW.pas` | `IDFT` インタフェースと汎用基底クラス `TDFT<_TItem_,_TTimes_,_TFreqs_>`。2 本のバッファ、2 個のプラン、`TransTF` / `TransFT` 操作を保持 |
+| `D1/LUX.FFTW.D1.pas` | `IDFT1D` / `TDFT1D<…>` — バッファは `TPoinArray1D<_TItem_>`。`PoinsX` の変更は相手側グリッドへ伝播し `RecreaPlans` を起動する |
+| `D1/LUX.FFTW.D1.Preset.pas` | 即用の 1 次元複素→複素変換：`TSingleDFTcc1D` / `TDoubleDFTcc1D`（および `ISingleDFTcc1D` / `IDoubleDFTcc1D`） |
 | `D2/…`, `D3/…` | 同じ 2 層構成の 2 階（`TPoinArray2D`, `fftw_plan_dft_2d`）および 3 階（`TPoinArray3D`, `fftw_plan_dft_3d`）版 |
 | `_DLL/`, `：FFTW/` | ビルド済み Win64 実行時 DLL と、同梱した MSYS2 `mingw-w64-fftw` パッケージ由来の FFTW 3.3.11 Windows ビルド [6] |
 
@@ -128,18 +128,18 @@ DLL バインディング
 ファイル構成：
 
 ```
-・LUX.Signal.FFTW/
-  ┣・fftw3.pas                         ･･･ FFTW 3 API の素の移植（両精度）
-  ┣・LUX.Signal.FFTW.pas               ･･･ IDFT・汎用 TDFT 基底クラス
+・LUX.FFTW/
+  ┣・fftw3.pas                    ･･･ FFTW 3 API の素の移植（両精度）
+  ┣・LUX.FFTW.pas                 ･･･ IDFT・汎用 TDFT 基底クラス
   ┣・D1/
-  ┃  ┣・LUX.Signal.FFTW.D1.pas        ･･･ IDFT1D / TDFT1D（自動再計画）
-  ┃  ┗・LUX.Signal.FFTW.D1.Preset.pas ･･･ TSingleDFTcc1D / TDoubleDFTcc1D
-  ┣・D2/                               ･･･ 2 階の同一構成
-  ┣・D3/                               ･･･ 3 階の同一構成
+  ┃  ┣・LUX.FFTW.D1.pas           ･･･ IDFT1D / TDFT1D（自動再計画）
+  ┃  ┗・LUX.FFTW.D1.Preset.pas    ･･･ TSingleDFTcc1D / TDoubleDFTcc1D
+  ┣・D2/                          ･･･ 2 階の同一構成
+  ┣・D3/                          ･･･ 3 階の同一構成
   ┣・_DLL/
-  ┃  ┗・Win64/{Debug,Release}/        ･･･ 倍・単精度＋スレッド DLL
-  ┗・：FFTW/                           ･･･ FFTW 3.3.11（MSYS2 ビルド）
-     ┗・fftw-3.3.11-msys2-x86_64/     ･･･ bin, include, lib, share, PKGINFO
+  ┃  ┗・Win64/{Debug,Release}/    ･･･ 倍・単精度＋スレッド DLL
+  ┗・：FFTW/                      ･･･ FFTW 3.3.11（MSYS2 ビルド）
+     ┗・fftw-3.3.11-msys2-x86_64/ ･･･ bin, include, lib, share, PKGINFO
 ```
 
 ## 4. 使い方
@@ -147,8 +147,8 @@ DLL バインディング
 ```pascal
 uses LUX.Complex,
      LUX.Data.Grid.T1,
-     LUX.Signal.FFTW,
-     LUX.Signal.FFTW.D1.Preset;
+     LUX.FFTW,
+     LUX.FFTW.D1.Preset;
 
 const
      _N_ = 512;
